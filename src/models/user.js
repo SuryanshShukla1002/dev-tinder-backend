@@ -24,5 +24,4 @@ const userSchema = new mongoose.Schema({
 
 module.exports = mongoose.model("User", userSchema);;
 
-// start 35 min
 
