@@ -4,28 +4,35 @@ const { validateSignUpData } = require("../utils/validation");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 
-
 authRouter.post("/signup", async (req, res) => {
     // Validation of data is required
     try {
         validateSignUpData(req);
-        // Encrypt the password 
+        // Encrypt the password
 
         const { firstName, lastName, emailId, password } = req.body;
 
         const passwordHash = await bcrypt.hash(password, 10);
 
         const user = new User({
-            firstName, lastName, emailId, password: passwordHash
+            firstName,
+            lastName,
+            emailId,
+            password: passwordHash,
         });
         // Creating a new instance of the user model
 
-        await user.save();
-        res.send("User Added Successfully!");
+        const savedUser = await user.save();
+        const tokens = await savedUser.getJWT();
+        // console.log(token)
+        res.cookie("token", tokens, {
+            expires: new Date(Date.now() + 8 * 3600000),
+        });
+
+        res.json({ message: "User added Successfully!", data: savedUser });
     } catch (err) {
         res.status(400).send("Error saving the user:" + err.message);
     }
-
 });
 
 authRouter.post("/login", async (req, res) => {
@@ -42,7 +49,7 @@ authRouter.post("/login", async (req, res) => {
             const tokens = await user.getJWT();
             // console.log(token)
             res.cookie("token", tokens, {
-                expires: new Date(Date.now() + 8 * 3600000)
+                expires: new Date(Date.now() + 8 * 3600000),
             });
             res.send(user);
         } else {
@@ -59,6 +66,5 @@ authRouter.post("/logout", async (req, res) => {
     });
     res.send("Logout Successfull");
 });
-
 
 module.exports = authRouter;
