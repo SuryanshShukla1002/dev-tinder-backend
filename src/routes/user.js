@@ -4,7 +4,7 @@ const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/user");
 const userRouter = express.Router();
 
-const USER_SAVE_DATA = "firstName lastName age gender about skills";
+const USER_SAVE_DATA = "firstName lastName age gender about skills photoUrl";
 
 userRouter.get("/user/requests/received", userAuth, async (req, res) => {
     try {
@@ -74,8 +74,11 @@ userRouter.get("/feed", userAuth, async (req, res) => {
                 { _id: { $nin: Array.from(hideUsersFromFeed) } },
                 { _id: { $ne: loggedInUser._id } },
             ],
-        }).select(USER_SAVE_DATA).skip(skip).limit(limit);
-        res.send(users);
+        })
+            .select(USER_SAVE_DATA)
+            .skip(skip)
+            .limit(limit);
+        res.send({ data: users });
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
