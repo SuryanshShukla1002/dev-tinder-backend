@@ -50,6 +50,13 @@ const userSchema = new mongoose.Schema({
         }
 
     },
+    isPremium: {
+        type: Boolean,
+        default: false
+    },
+    membershipType: {
+        type: String
+    },
     photoUrl: {
         type: String,
         default: "https://png.pngtree.com/png-vector/20230313/ourmid/pngtree-female-admin-and-assistant-job-vacancies-vector-png-image_6646509.png",
