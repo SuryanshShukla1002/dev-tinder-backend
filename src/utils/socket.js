@@ -39,7 +39,7 @@ const initializeSocket = (server) => {
                     text,
                 });
                 await chat.save();
-                io.to(roomId).emit("messageReceived", { firstName, text,});
+                io.to(roomId).emit("messageReceived", { firstName, text, });
             } catch (err) {
                 console.log(err);
             }
