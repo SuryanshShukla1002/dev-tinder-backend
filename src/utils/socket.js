@@ -25,7 +25,6 @@ const initializeSocket = (server) => {
             try {
                 const roomId = getSecrectRoomId(userId, targetUserId);
                 // console.log(firstName + " " + text);
-
                 let chat = await Chat.findOne({
                     participants: { $all: [userId, targetUserId] },
                 });
